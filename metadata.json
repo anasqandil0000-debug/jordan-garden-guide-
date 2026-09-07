@@ -1,0 +1,7 @@
+{
+  "name": "دليل الحدائق والتنظيف الأردني",
+  "description": "دليل شامل للعناية بالحدائق وتنظيف المنازل في الأردن، مع نصائح المواسم الزراعية، ومحلل ذكي للحدائق، وجداول مواعيد، ونظام ملف شخصي ومقالات مفضلة",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
