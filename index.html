@@ -3,19 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دليل الحدائق والدار الأردني</title>
+    <title>VEX | لوحة التحكم المركزية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Tahoma, sans-serif; background: #f4f7f6; color: #333; text-align: center; padding: 50px; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
-        h1 { color: #2c3e50; }
-        p { color: #555; line-height: 1.6; }
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.5); }
+        }
+        .glow-effect { animation: pulseGlow 4s infinite; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
     </style>
 </head>
-<body>
-    <div class="card">
-        <h1>🌱 دليل الحدائق والدار الأردني</h1>
-        <p>مرحباً بك في منصتك الزراعية والمنزلية المصممة خصيصاً للبيئة الأردنية.</p>
-        <p><b>التطبيق قيد التشغيل عبر GitHub Pages!</b></p>
-    </div>
+<body class="bg-[#07090e] text-gray-100 min-h-screen flex overflow-x-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 glass-card border-l border-gray-800/60 hidden md:flex flex-col justify-between p-6 z-20">
+        <div>
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-500/30">
+                    V
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider text-white">VEX <span class="text-blue-500 text-xs">CORE</span></h1>
+                    <p class="text-xs text-gray-400">لوحة التحكم السيادية</p>
+                </div>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="#overview" onclick="switchTab('overview')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600/20 text-blue-400 font-semibold transition-all duration-300 border border-blue-500/30">
+                    <i class="fa-solid fa-chart-pie w-5"></i> نظرة عامة
+                </a>
+                <a href="#orders" onclick="switchTab('orders')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-800/50 hover:text-white font-semibold transition-all duration-300">
+                    <i class="fa-solid fa-box-open w-5"></i> إدارة الطلبات
+                </a>
+                <a href="#analytics" onclick="switchTab('analytics')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-800/50 hover:text-white font-semibold transition-all duration-300">
+                    <i class="fa-solid fa-chart-line w-5"></i> التحليلات والأرباح
+                </a>
+                <a href="#users" onclick="switchTab('users')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-800/50 hover:text-white font-semibold transition-all duration-300">
+                    <i class="fa-solid fa-users w-5"></i> المستخدمين
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 rounded-xl glass-card border border-blue-500/20 text-center">
+            <div class="flex items-center justify-center gap-2 text-xs text-emerald-400 mb-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> نظام السيرفرات متصل
+            </div>
+            <p class="text-[10px] text-gray-400">مجموعة 10 أجهزة متزامنة (2.5TB)</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-h-screen">
+        
+        <!-- Top Navbar -->
+        <header class="h-20 glass-card border-b border-gray-800/60 px-8 flex items-center justify-between z-10">
+            <div class="flex items-center gap-4">
+                <h2 id="page-title" class="text-xl font-bold text-white">نظرة عامة على النظام</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="refreshData()" class="px-4 py-2 bg-gray-800/80 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 border border-gray-700">
+                    <i class="fa-solid fa-rotate-right" id="refresh-icon"></i> تحديث البيانات
+                </button>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center font-bold text-white shadow-lg">
+                    AD
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Body -->
+        <div class="p-8 flex-1 overflow-y-auto space-y-8">
+
+            <!-- TAB 1: OVERVIEW -->
+            <section id="tab-overview" class="space-y-8">
+                <!-- Stat Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-card p-6 rounded-2xl glow-effect transition-all duration-300 hover:scale-[1.02]">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-semibold text-gray-400">إجمالي المستخدمين</span>
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center"><i class="fa-solid fa-users text-lg"></i></div>
+                        </div>
+                        <h3 class="text-3xl font-black text-white" id="stat-users">1,248</h3>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +12% هذا الأسبوع</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl glow-effect transition-all duration-300 hover:scale-[1.02]">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-semibold text-gray-400">إجمالي الطلبات</span>
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-shopping-bag text-lg"></i></div>
+                        </div>
+                        <h3 class="text-3xl font-black text-white" id="stat-orders">342</h3>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +8% نمو مستمر</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl glow-effect transition-all duration-300 hover:scale-[1.02]">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-semibold text-gray-400">إجمالي المبيعات (Revenue)</span>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-wallet text-lg"></i></div>
+                        </div>
+                        <h3 class="text-3xl font-black text-white" id="stat-revenue">$18,450</h3>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +24% إيرادات قياسية</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl glow-effect transition-all duration-300 hover:scale-[1.02]">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-semibold text-gray-400">صافي الأرباح (Net Profit)</span>
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center"><i class="fa-solid fa-chart-line text-lg"></i></div>
+                        </div>
+                        <h3 class="text-3xl font-black text-white" id="stat-profit">$12,310</h3>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-up"></i>هامش ربح ممتاز</p>
+                    </div>
+                </div>
+
+                <!-- Recent Activity & Quick Tracker -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 rounded-2xl lg:col-span-2">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-white">النشاط المباشر للسيرفر والعمليات</h3>
+                            <span class="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">تحديث فوري</span>
+                        </div>
+                        <div class="space-y-4" id="activity-stream">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-4">حالة النظام التخزيني</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                        <span>قاعدة البيانات (MongoDB Cluster)</span>
+                                        <span class="text-blue-400 font-bold">2.5 TB / 5.0 TB</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                                        <div class="bg-gradient-to-r from-blue-600 to-indigo-500 h-full w-[50%] transition-all duration-1000"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                        <span>استجابة السيرفرات (Latency)</span>
+                                        <span class="text-emerald-400 font-bold">14 ms</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                                        <div class="bg-emerald-500 h-full w-[95%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 p-4 rounded-xl bg-blue-600/10 border border-blue-500/20 text-center">
+                            <p class="text-xs text-blue-300 font-semibold">كل العقد العشائرية (Node Cluster) تعمل بكفاءة قصوى دون أي اختناقات.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: ORDERS MANAGEMENT -->
+            <section id="tab-orders" class="space-y-6 hidden">
+                <div class="glass-card p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="relative w-full sm:w-96">
+                        <i class="fa-solid fa-search absolute right-4 top-3.5 text-gray-400"></i>
+                        <input type="text" id="order-search" oninput="filterOrders()" placeholder="بحث برقم الطلب، اسم الزبون، أو الحالة..." class="w-full bg-gray-900/80 border border-gray-700/60 rounded-xl px-4 py-2.5 pr-11 text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <select id="status-filter" onchange="filterOrders()" class="bg-gray-900/80 border border-gray-700/60 rounded-xl px-4 py-2.5 text-sm text-gray-300 focus:outline-none focus:border-blue-500">
+                            <option value="all">جميع الحالات</option>
+                            <option value="completed">مكتمل</option>
+                            <option value="processing">قيد المعالجة</option>
+                            <option value="pending">معلق</option>
+                            <option value="cancelled">ملغي</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden border border-gray-800">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-gray-900/50 border-b border-gray-800 text-xs text-gray-400 uppercase">
+                                    <th class="p-4">رقم الطلب / المعرف</th>
+                                    <th class="p-4">الزبون</th>
+                                    <th class="p-4">نوع الطلب</th>
+                                    <th class="p-4">سعر البيع</th>
+                                    <th class="p-4">صافي الربح</th>
+                                    <th class="p-4">الحالة</th>
+                                    <th class="p-4 text-center">الإجراءات السريعة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body" class="divide-y divide-gray-800/60 text-sm">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: ANALYTICS -->
+            <section id="tab-analytics" class="space-y-6 hidden">
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold text-white mb-4">تحليلات الأرباح والمبيعات التصاعدية</h3>
+                    <div class="h-64 flex items-end gap-3 pt-10 px-4 justify-between" id="analytics-bars">
+                        <!-- Populated by JS for visual representation -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: USERS -->
+            <section id="tab-users" class="space-y-6 hidden">
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold text-white mb-4">قائمة المستخدمين المسجلين في النظام</h3>
+                    <div class="space-y-3" id="users-list-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- JavaScript Core Engine -->
+    <script>
+        // Mock Data Database simulating backend connection
+        let appData = {
+            stats: { users: 1248, orders: 342, revenue: 18450, profit: 12310 },
+            orders: [
+                { id: "ORD-9021", client: "أحمد خالد", type: "ready_template", price: 150, profit: 110, status: "completed" },
+                { id: "ORD-9022", client: "عمر الفاروق", type: "custom_build", price: 650, profit: 450, status: "processing" },
+                { id: "ORD-9023", client: "سارة عبد الله", type: "ready_template", price: 80, profit: 60, status: "pending" },
+                { id: "ORD-9024", client: "محمد إبراهيم", type: "custom_build", price: 1200, profit: 850, status: "completed" },
+                { id: "ORD-9025", client: "يوسف المهندس", type: "ready_template", price: 200, profit: 150, status: "cancelled" }
+            ],
+            users: [
+                { name: "أحمد خالد", email: "ahmad@vex.io", provider: "google", role: "client" },
+                { name: "عمر الفاروق", email: "omar@vex.io", provider: "apple", role: "client" },
+                { name: "أنس (المدير العام)", email: "anas@vex.io", provider: "google", role: "admin" }
+            ],
+            activities: [
+                { text: "تسجيل دخول مستجد عبر Google OAuth", time: "منذ دقيقة", type: "info" },
+                { text: "اكتمال الطلب رقم ORD-9021 وتحويل صافي الربح", time: "منذ 5 دقائق", type: "success" },
+                { text: "تحديث قاعدة البيانات على مجموعة السيرفرات بنجاح", time: "منذ 15 دقيقة", type: "system" }
+            ]
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('main section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600/20', 'text-blue-400', 'border', 'border-blue-500/30');
+                btn.classList.add('text-gray-400');
+            });
+            event.currentTarget.classList.add('bg-blue-600/20', 'text-blue-400', 'border', 'border-blue-500/30');
+            event.currentTarget.classList.remove('text-gray-400');
+
+            const titles = { overview: 'نظرة عامة على النظام', orders: 'إدارة الطلبات المتقدمة', analytics: 'التحليلات المالية والتقارير', users: 'إدارة المستخدمين' };
+            document.getElementById('page-title').innerText = titles[tabId];
+        }
+
+        // Render Orders Table with Filters and Status Control
+        function renderOrders(ordersToRender = appData.orders) {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+
+            if (ordersToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">لا توجد طلبات مطابقة للبحث</td></tr>`;
+                return;
+            }
+
+            ordersToRender.forEach(order => {
+                let statusBadge = '';
+                if(order.status === 'completed') statusBadge = '<span class="px-3 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">مكتمل</span>';
+                if(order.status === 'processing') statusBadge = '<span class="px-3 py-1 rounded-full text-xs bg-blue-500/10 text-blue-400 border border-blue-500/20">قيد المعالجة</span>';
+                if(order.status === 'pending') statusBadge = '<span class="px-3 py-1 rounded-full text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20">معلق</span>';
+                if(order.status === 'cancelled') statusBadge = '<span class="px-3 py-1 rounded-full text-xs bg-rose-500/10 text-rose-400 border border-rose-500/20">ملغي</span>';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-800/30 transition-all">
+                        <td class="p-4 font-bold text-white">${order.id}</td>
+                        <td class="p-4 text-gray-300">${order.client}</td>
+                        <td class="p-4 text-gray-400">${order.type === 'ready_template' ? 'قالب جاهز' : 'تطوير مخصص'}</td>
+                        <td class="p-4 text-emerald-400 font-semibold">$${order.price}</td>
+                        <td class="p-4 text-blue-400 font-semibold">$${order.profit}</td>
+                        <td class="p-4">${statusBadge}</td>
+                        <td class="p-4 text-center space-x-2 space-x-reverse">
+                            <button onclick="updateOrderStatus('${order.id}', 'completed')" title="تحديد كمكتمل" class="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-all"><i class="fa-solid fa-check"></i></button>
+                            <button onclick="updateOrderStatus('${order.id}', 'cancelled')" title="إلغاء الطلب" class="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-all"><i class="fa-solid fa-xmark"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Filter and Search Logic
+        function filterOrders() {
+            const query = document.getElementById('order-search').value.toLowerCase();
+            const status = document.getElementById('status-filter').value;
+
+            const filtered = appData.orders.filter(order => {
+                const matchesQuery = order.id.toLowerCase().includes(query) || order.client.toLowerCase().includes(query);
+                const matchesStatus = status === 'all' || order.status === status;
+                return matchesQuery && matchesStatus;
+            });
+
+            renderOrders(filtered);
+        }
+
+        // Update Order Status Dynamically
+        function updateOrderStatus(orderId, newStatus) {
+            const order = appData.orders.find(o => o.id === orderId);
+            if(order) {
+                order.status = newStatus;
+                renderOrders();
+                showNotification(`تم تحديث حالة الطلب ${orderId} بنجاح`);
+            }
+        }
+
+        // Render Activity Stream
+        function renderActivities() {
+            const container = document.getElementById('activity-stream');
+            container.innerHTML = '';
+            appData.activities.forEach(act => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-gray-900/50 border border-gray-800 text-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span class="text-gray-300">${act.text}</span>
+                        </div>
+                        <span class="text-xs text-gray-500">${act.time}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Analytics Bars
+        function renderAnalytics() {
+            const container = document.getElementById('analytics-bars');
+            container.innerHTML = '';
+            const heights = [40, 65, 50, 85, 70, 95, 80, 100];
+            heights.forEach((h, i) => {
+                container.innerHTML += `
+                    <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                        <div class="w-full bg-gradient-to-t from-blue-600 to-indigo-500 rounded-t-lg transition-all duration-500 hover:opacity-80" style="height: ${h}%"></div>
+                        <span class="text-[10px] text-gray-500">يوم ${i+1}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Users List
+        function renderUsers() {
+            const container = document.getElementById('users-list-container');
+            container.innerHTML = '';
+            appData.users.forEach(u => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-4 rounded-xl bg-gray-900/50 border border-gray-800">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold">${u.name[0]}</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">${u.name}</h4>
+                                <p class="text-xs text-gray-400">${u.email}</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs ${u.role === 'admin' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-gray-800 text-gray-300'}">
+                            ${u.role === 'admin' ? 'مدير النظام' : 'عميل'}
+                        </span>
+                    </div>
+                `;
+            });
+        }
+
+        // Refresh Simulation with Animation
+        function refreshData() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('animate-spin');
+            setTimeout(() => {
+                icon.classList.remove('animate-spin');
+                renderOrders();
+                renderActivities();
+                renderAnalytics();
+                renderUsers();
+            }, 600);
+        }
+
+        // Simple Notification Toast Generator
+        function showNotification(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-6 left-6 bg-blue-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 text-sm font-semibold transition-all duration-300 animate-bounce';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initial Load Execution
+        window.onload = () => {
+            renderOrders();
+            renderActivities();
+            renderAnalytics();
+            renderUsers();
+        };
+    </script>
 </body>
 </html>
